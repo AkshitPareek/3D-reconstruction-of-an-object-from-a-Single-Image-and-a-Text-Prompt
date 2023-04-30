@@ -74,13 +74,19 @@ python -m ipykernel install --user --name=btp
 
 ## Usage
 
-To use this project, you need to put your input image in the input folder, and follow the steps on the [notebook](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/main/reconstruction.ipynb) to perform the reconstruction.
+To use this project, you need to put your input image in the input folder.
 
 ```bash
 mkdir input
 ```
 ```
 mkdir output
+```
+
+You can perform the reconstruction using
+
+```
+python reconstruction.py --image_name 'name_of_your_image.extension' --caption 'your_text_prompt'
 ```
 
 
