@@ -1,10 +1,13 @@
+
 # 3D Reconstruction of an object from a Single Image and a Text Prompt
 
 This project combines GroundingDINO, Segment Anything, ZoeDepth and Multiview Compressive Coding for 3D reconstruction to reconstruct 3D model of the prompted object from a single image.
 
 ## Demo
+|Mask| Depth|
+|--|--|
+| ![Mask](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/9472e5a745f026af084c40e27888c8f4b997bd34/assets/asset1.png) | ![Depth](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/9472e5a745f026af084c40e27888c8f4b997bd34/assets/asset2.png) |
 
-[Add a GIF or a video of your project in action]
 
 ## Installation
 
