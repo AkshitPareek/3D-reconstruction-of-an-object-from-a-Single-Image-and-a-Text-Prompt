@@ -6,9 +6,8 @@ This project combines GroundingDINO, Segment Anything, ZoeDepth and Multiview Co
 ## Demo
 |Input|Mask|Depth|Output|
 |--|--|--|--|
-|![Input](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/daea412dff07e1098786d32dc0dfc9168aff77c6/assets/birdie.jpeg)| ![Mask](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/9472e5a745f026af084c40e27888c8f4b997bd34/assets/asset1.png) | ![Depth](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/9472e5a745f026af084c40e27888c8f4b997bd34/assets/asset2.png) |![Output](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/b0f42c10747c6b82505030e4516f811943083938/assets/birdie.gif)
-|
-
+|![Input](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/daea412dff07e1098786d32dc0dfc9168aff77c6/assets/birdie.jpeg)| ![Mask](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/9472e5a745f026af084c40e27888c8f4b997bd34/assets/asset1.png) | ![Depth](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/9472e5a745f026af084c40e27888c8f4b997bd34/assets/asset2.png) |![Output](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/b0f42c10747c6b82505030e4516f811943083938/assets/birdie.gif)|
+|![Input](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/28be1c05920295b1b86acee2f041463c37df7a52/assets/airplane.png)|![Mask](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/28be1c05920295b1b86acee2f041463c37df7a52/assets/airplane_mask.png)|[Depth](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/28be1c05920295b1b86acee2f041463c37df7a52/assets/airplane_depth.png)|![Output](https://github.com/AkshitPareek/3D-reconstruction-of-an-object-from-a-Single-Image-and-a-Text-Prompt/blob/28be1c05920295b1b86acee2f041463c37df7a52/assets/airplane.gif)|
 
 ## Installation
 
