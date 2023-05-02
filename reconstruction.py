@@ -70,7 +70,6 @@ def load_grounding_dino(CONFIG_PATH, WEIGHTS_PATH):
 
 # Load Segment Anything for segmentation
 def create_sam(device):
-    """Load the segment-anything model, fetching the model-file as necessary."""
     sam_checkpoint = 'checkpoints/sam_vit_h_4b8939.pth'
     sam = build_sam(checkpoint=sam_checkpoint)
     return sam.to(device=device)
@@ -108,8 +107,8 @@ def run_sam(sam, rgb, boxes, device):
     return masks
 
 # saving the mask file (optional)
-def save_mask(image_mask_pil, IMAGE_NAME):
-    output_folder = os.path.join(os.getcwd(), "output/obj_masks")
+def save_mask(image_mask_pil, IMAGE_NAME, prefix):
+    output_folder = os.path.join(prefix, "obj_masks")
     filename = f"{os.path.splitext(IMAGE_NAME)[0]}_seg.png"
 
     # Create the output folder if it doesn't exist
@@ -144,8 +143,6 @@ def get_intrinsics(H,W, principal_point):
     of bounding box.
     """
     f = 0.5 * W / np.tan(0.5 * 55 * np.pi / 180.0)
-    # cx = 0.5 * W
-    # cy = 0.5 * H
     cx, cy = principal_point
     return np.array([[f, 0, cx],
                      [0, f, cy],
@@ -182,8 +179,8 @@ def backproject_depth_to_pointcloud(depth, principal_point, rotation=np.eye(3), 
 
 
 # save the point cloud as an .obj file(optional)
-def save_point_cloud_to_obj(point_cloud, IMAGE_NAME):
-    op_folder = os.path.join(os.getcwd(), "output/pcd_objects")
+def save_point_cloud_to_obj(point_cloud, IMAGE_NAME, prefix):
+    op_folder = os.path.join(prefix, "pcd_objects")
     op_filename = f"{os.path.splitext(IMAGE_NAME)[0]}.obj"
 
     if not os.path.exists(op_folder):
@@ -287,7 +284,22 @@ def run_viz(model, samples, device, args, prefix):
                     ) * torch.linspace(0, 1, 256, device=pred.device)
                 ).sum(axis=2)
             )
-    with open(prefix + f"_{os.path.splitext(args.image_name)[0]}" +'.html', 'a') as f:
+
+    # Create a dictionary containing the data
+    recon_data = {
+        'pred_colors': torch.cat(pred_colors, dim=0).cpu().numpy(),
+        'pred_occupy': torch.cat(pred_occupy, dim=1).cpu().numpy(),
+        'unseen_xyz': unseen_xyz.cpu().numpy()
+    }
+
+
+    # Save the dictionary in a single .npz file
+    np.savez(prefix + f"/{os.path.splitext(args.image_name)[0]}_recon_data", 
+             pred_colors=recon_data['pred_colors'], 
+             pred_occupy=recon_data['pred_occupy'], 
+             unseen_xyz=recon_data['unseen_xyz'])
+    
+    with open(prefix + f"/{os.path.splitext(args.image_name)[0]}.html", 'a') as f:
         generate_html(
             None,
             None, None,
@@ -356,13 +368,13 @@ def main(args):
 
     annotated_frame, boxes, logits, phrases = run_grounding_dino(IMAGE_PATH, GroundingDINO_model, TEXT_PROMPT, BOX_THRESHOLD=0.35, TEXT_THRESHOLD=0.25)
     
-    principal_point = get_principal_point(boxes, H=rgb.shape[0], W=rgb.shape[1])
+    principal_point = get_principal_point(boxes, rgb.shape[0], rgb.shape[1])
 
     masks = run_sam(sam, rgb, boxes, device)
 
     # image_mask_pil = Image.fromarray(masks[0][0].cpu().numpy())
 
-    # mask_path = save_mask(image_mask_pil, IMAGE_NAME)
+    # mask_path = save_mask(image_mask_pil, IMAGE_NAME, prefix)
 
     if device == 'cuda':
         depth = depth_model.infer(seen_rgb.permute(2, 0, 1)[None].cuda())
@@ -373,7 +385,7 @@ def main(args):
 
     point_cloud = backproject_depth_to_pointcloud(depth, principal_point)
 
-    # pcd_path = save_point_cloud_to_obj(point_cloud, IMAGE_NAME)
+    # pcd_path = save_point_cloud_to_obj(point_cloud, IMAGE_NAME, prefix)
 
     seen_xyz = point_cloud
     seen_xyz = torch.tensor(seen_xyz).float()
@@ -418,7 +430,13 @@ def main(args):
         [seen_xyz, seen_rgb],
         [torch.zeros((20000, 3)), torch.zeros((20000, 3))],
     ]
-    run_viz(recon_model, samples, device, args, prefix=args.output)
+
+    prefix = os.path.join(args.output, IMAGE_NAME.split('.')[0])
+
+    if not os.path.exists(prefix):
+        os.makedirs(prefix)
+
+    run_viz(recon_model, samples, device, args, prefix)
 
 
 
@@ -429,7 +447,7 @@ if __name__ == '__main__':
     parser.add_argument('--point_cloud', type=str, help='input obj file')
     parser.add_argument('--seg', type=str, help='input mask file')
     parser.add_argument('--caption', default='a toy', type=str, help='input text prompt')
-    parser.add_argument('--output', default='output/3D', type=str, help='output path')
+    parser.add_argument('--output', default='output', type=str, help='output path')
     parser.add_argument('--granularity', default=0.05, type=float, help='output granularity')
     parser.add_argument('--score_thresholds', default=[0.1, 0.2, 0.3, 0.4, 0.5], type=float, nargs='+', help='score thresholds')
     parser.add_argument('--temperature', default=0.1, type=float, help='temperature for color prediction.')
@@ -441,8 +459,4 @@ if __name__ == '__main__':
     args.resume = args.checkpoint
     args.viz_granularity = args.granularity
     main(args)
-
-
-
-
 
